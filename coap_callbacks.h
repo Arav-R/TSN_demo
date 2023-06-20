@@ -8,6 +8,7 @@
 #define __CoAp__
 extern bool safe;
 extern int stepsLeft;
+extern int target;
 extern int currentStep;
 extern int microStep;
 extern int stepsPerSlot;

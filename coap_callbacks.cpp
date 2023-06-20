@@ -6,6 +6,7 @@
 
  bool safe = true;
  int stepsLeft = 0;
+ int target = 0;
  int currentStep = 0;
  int microStep = 1;
  int stepsPerSlot = 25 * microStep;
@@ -161,10 +162,13 @@ void callback_multistep_cmd(CoapPacket &packet, String url, IPAddress ip, int po
         Serial.println(message);
         
         Serial.println("Stepping!");
-        Serial.println(message.toInt() + 5);
 
         
         stepsLeft = message.toInt();
+        target = message.toInt();
+
+        currentStep += message.toInt();
+
 
         // for(int x = 0; x < message.toInt(); x++) {
         //   digitalWrite(pinOut_STEP,HIGH); 

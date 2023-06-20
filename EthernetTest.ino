@@ -15,7 +15,7 @@ namespace qn = qindesign::network;
 using namespace std;
 
 //Initialize network stack
-IPAddress IP_Addr(10, 1, 1, 59);
+IPAddress IP_Addr(10, 1, 1, 60);
 IPAddress netmask(255, 255, 255, 0);
 IPAddress gateway(10, 1, 1, 1);
 unsigned int localPort = 5683;
@@ -117,6 +117,12 @@ void setup() {
   Serial.begin(115200);
   delay(5000);
 
+  stepper1.setMaxSpeed(2000); // Set maximum speed value for the stepper
+  stepper1.setAcceleration(20000); // Set acceleration value for the stepper
+  stepper1.setCurrentPosition(0); // Set the current position to 0 steps
+
+  delay(1000);
+
   setup_network();
   delay(10);
   Serial.println(qn::Ethernet.localIP());
@@ -148,18 +154,14 @@ void loop() {
   if (currentStep % stepsPerSlot == 0){
              safe = true;
      } 
-  
-  while(stepsLeft > 0) {
-          digitalWrite(pinOut_STEP,HIGH); 
-          delayMicroseconds(delayMicro);    // by changing this time delay between the steps we can change the rotation speed
-          digitalWrite(pinOut_STEP,LOW); 
-          delayMicroseconds(delayMicro); 
-
-          stepsLeft--;
-          currentStep++;
+  stepper1.move(target);
+  while(stepper1.currentPosition() != target) {
+          stepper1.run();
 
           safe = false;
          
           coap.loop();
       }
+  stepper1.setCurrentPosition(0); // reset
+  target = 0;
 }
