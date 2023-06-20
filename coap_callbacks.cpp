@@ -7,6 +7,7 @@
  bool safe = true;
  int stepsLeft = 0;
  int target = 0;
+ int reverse = 1;
  int currentStep = 0;
  int microStep = 1;
  int stepsPerSlot = 25 * microStep;
@@ -89,11 +90,13 @@ void callback_direction_cmd(CoapPacket &packet, String url, IPAddress ip, int po
 
             //digitalWrite(valve_cmd_map[valve_num], LOW);
             digitalWrite(pinOut_DIR, LOW);
+            reverse = 1;
         } 
         else if(message.equals("1")) {
             Serial.println("backwards");
             //digitalWrite(valve_cmd_map[valve_num], HIGH);
             digitalWrite(pinOut_DIR, HIGH);
+            reverse = -1;
         } 
     }    
 

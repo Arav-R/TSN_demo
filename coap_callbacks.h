@@ -9,6 +9,7 @@
 extern bool safe;
 extern int stepsLeft;
 extern int target;
+extern int reverse;
 extern int currentStep;
 extern int microStep;
 extern int stepsPerSlot;
