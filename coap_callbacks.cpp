@@ -13,6 +13,10 @@
  int stepsPerSlot = 25 * microStep;
  int delayMicro = 1000;
 
+ int maxSpeed = 2000;
+ int prevSpeed = 0;
+ int accel = 20000;
+ int prevAccel = 0;
 
 
 
@@ -32,7 +36,7 @@
 
 void callback_core(CoapPacket &packet, String url, IPAddress ip, int port) {
   Serial.println("We are being discovered.");
-  String resource_str = "</direction/cmd>,</step/cmd>,</multistep/cmd>,</microStep/cmd>,</delay/cmd>,</safe/cmd>,</total/cmd>,</led/cmd>";
+  String resource_str = "</direction/cmd>,</step/cmd>,</multistep/cmd>,</microStep/cmd>,</delay/cmd>,</safe/cmd>,</total/cmd>,</led/cmd>,</speed/cmd>,</accel/cmd>";
   packet.payload = (uint8_t *)resource_str.c_str();
   packet.payloadlen = resource_str.length();
   packet.code = COAP_CONTENT;
@@ -48,17 +52,9 @@ void callback_core(CoapPacket &packet, String url, IPAddress ip, int port) {
 
 void clear_packet(CoapPacket &packet) {
     memset(packet.payload, 0, packet.payloadlen);
-    if (
-        packet.optionnum == 1 && 
-        packet.options[0].number == COAP_OBSERVE && 
-        packet.options[0].length > 0) {
-        // we made this option so do not clear it. 
-    }
-    else {
-        memset(packet.options, 0, packet.optionnum);
-        packet.optionnum = 0;
-    }      
     
+    memset(packet.options, 0, packet.optionnum);
+        packet.optionnum = 0;
 
 }
 
@@ -70,6 +66,13 @@ void configure_response(CoapPacket &packet){
     optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN & 0x00FF) ;
     packet.addOption(COAP_CONTENT_FORMAT, 2, optionBuffer); 
 }
+
+
+
+
+
+
+
 
 void callback_direction_cmd(CoapPacket &packet, String url, IPAddress ip, int port) {
     // determine individual valve from url
@@ -313,6 +316,100 @@ void callback_delay_cmd(CoapPacket &packet, String url, IPAddress ip, int port) 
 
 }
 
+void callback_speed_cmd(CoapPacket &packet, String url, IPAddress ip, int port) {
+    // determine individual valve from url
+    //int valve_num = get_index_from_url(url);
+
+    // copy payload
+    char p[packet.payloadlen + 1] = {};
+    Serial.println(packet.payloadlen);
+    memcpy(p, packet.payload, packet.payloadlen);
+    // p[packet.payloadlen] = NULL;
+    String message(p);
+
+    // process PUT
+    if (packet.code == COAP_PUT) {
+        Serial.println(message);
+
+        maxSpeed = message.toInt();
+
+      
+
+        // for(int x = 0; x < message.toInt(); x++) {
+        //   digitalWrite(pinOut_STEP,HIGH); 
+        //   delayMicroseconds(1000);    // by changing this time delay between the steps we can change the rotation speed
+        //   digitalWrite(pinOut_STEP,LOW); 
+        //   delayMicroseconds(1000); 
+
+        //   Serial.println(x);
+        // }
+        Serial.print("Max Speed: "); 
+        Serial.println(message.toInt());
+    }    
+
+    // clear out packet fields and craft response
+    clear_packet(packet);
+
+    Serial.print("Max Speed: "); 
+    Serial.println(message.toInt());
+
+    char payload[11];  // 10 digits plus NULL
+    int val = maxSpeed;
+    Serial.println(val);
+    sprintf(payload, "%d", val);
+    packet.payload = (uint8_t *)payload;
+    packet.payloadlen = strlen(payload);
+    configure_response(packet);  
+
+}
+
+void callback_accel_cmd(CoapPacket &packet, String url, IPAddress ip, int port) {
+    // determine individual valve from url
+    //int valve_num = get_index_from_url(url);
+
+    // copy payload
+    char p[packet.payloadlen + 1] = {};
+    Serial.println(packet.payloadlen);
+    memcpy(p, packet.payload, packet.payloadlen);
+    // p[packet.payloadlen] = NULL;
+    String message(p);
+
+    // process PUT
+    if (packet.code == COAP_PUT) {
+        Serial.println(message);
+
+        accel = message.toInt();
+
+      
+
+        // for(int x = 0; x < message.toInt(); x++) {
+        //   digitalWrite(pinOut_STEP,HIGH); 
+        //   delayMicroseconds(1000);    // by changing this time delay between the steps we can change the rotation speed
+        //   digitalWrite(pinOut_STEP,LOW); 
+        //   delayMicroseconds(1000); 
+
+        //   Serial.println(x);
+        // }
+        Serial.print("Accel: "); 
+        Serial.println(message.toInt());
+    }    
+
+    // clear out packet fields and craft response
+    clear_packet(packet);
+
+    Serial.print("Accel: "); 
+    Serial.println(message.toInt());
+
+    char payload[11];  // 10 digits plus NULL
+    int val = accel;
+    Serial.println(val);
+    sprintf(payload, "%d", val);
+    packet.payload = (uint8_t *)payload;
+    packet.payloadlen = strlen(payload);
+    configure_response(packet);  
+
+}
+
 void callback_safe(CoapPacket &packet, String url, IPAddress ip, int port){
     // determine individual loop from url
     //int loop_num = get_index_from_url(url);
@@ -387,14 +484,19 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
     Serial.print("total steps: "); 
     Serial.println(message.toInt());
 
-    char payload[11];  // 10 digits plus NULL
+    char payload[11] = {0};  // 10 digits plus NULL
     int val = currentStep;
     Serial.println(val);
-    sprintf(payload, "%d", val);
+    sprintf(payload, "%u", val);
+    Serial.println(payload);
+    Serial.println(strlen(payload));
     packet.payload = (uint8_t *)payload;
     packet.payloadlen = strlen(payload);
-    configure_response(packet);  
-
+    for(int i = 0; i< packet.payloadlen; i++) {
+        Serial.println(packet.payload[i]);
+    }
+  //  configure_response(packet);  
+  Coap.sendResponse(ip, port, packet.messageid, payload);
 }
 
 
