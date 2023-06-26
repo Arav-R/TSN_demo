@@ -351,16 +351,26 @@ void callback_speed_cmd(CoapPacket &packet, String url, IPAddress ip, int port) 
     // clear out packet fields and craft response
     clear_packet(packet);
 
-    Serial.print("Max Speed: "); 
-    Serial.println(message.toInt());
+    long lng = maxSpeed;                   // up to stupid big number
+    packet.payloadlen = 4;
+    packet.payload[0] = (byte) ((lng & 0xFF000000) >> 24 );
+    packet.payload[1] = (byte) ((lng & 0x00FF0000) >> 16 );
+    packet.payload[2] = (byte) ((lng & 0x0000FF00) >> 8  );
+    packet.payload[3] = (byte) ((lng & 0X000000FF)       );
 
-    char payload[11];  // 10 digits plus NULL
-    int val = maxSpeed;
-    Serial.println(val);
-    sprintf(payload, "%d", val);
-    packet.payload = (uint8_t *)payload;
-    packet.payloadlen = strlen(payload);
-    configure_response(packet);  
+
+
+    // int myVal = currentStep;     // WORKING up to 65,536
+    // packet.payloadlen = 2;
+    // packet.payload[0] = highByte(myVal);
+    // packet.payload[1] = lowByte(myVal);
+
+
+    // uint8_t val = currentStep;
+    // //Serial.println((const char*)&val);
+    // packet.payload = &val;
+    // packet.payloadlen = 1;
+    configure_response(packet); 
 
 }
 
@@ -398,16 +408,26 @@ void callback_accel_cmd(CoapPacket &packet, String url, IPAddress ip, int port) 
     // clear out packet fields and craft response
     clear_packet(packet);
 
-    Serial.print("Accel: "); 
-    Serial.println(message.toInt());
+    long lng = accel;                   // up to stupid big number
+    packet.payloadlen = 4;
+    packet.payload[0] = (byte) ((lng & 0xFF000000) >> 24 );
+    packet.payload[1] = (byte) ((lng & 0x00FF0000) >> 16 );
+    packet.payload[2] = (byte) ((lng & 0x0000FF00) >> 8  );
+    packet.payload[3] = (byte) ((lng & 0X000000FF)       );
 
-    char payload[11];  // 10 digits plus NULL
-    int val = accel;
-    Serial.println(val);
-    sprintf(payload, "%d", val);
-    packet.payload = (uint8_t *)payload;
-    packet.payloadlen = strlen(payload);
-    configure_response(packet);  
+
+
+    // int myVal = currentStep;     // WORKING up to 65,536
+    // packet.payloadlen = 2;
+    // packet.payload[0] = highByte(myVal);
+    // packet.payload[1] = lowByte(myVal);
+
+
+    // uint8_t val = currentStep;
+    // //Serial.println((const char*)&val);
+    // packet.payload = &val;
+    // packet.payloadlen = 1;
+    configure_response(packet); 
 
 }
 
