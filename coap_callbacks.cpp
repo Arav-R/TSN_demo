@@ -481,18 +481,20 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
     }    
 
     // clear out packet fields and craft response
+    // clear out packet fields and craft response
     clear_packet(packet);
 
-    Serial.print("total steps: "); 
-    Serial.println(message.toInt());
 
-    char payload[11];  // 10 digits plus NULL
-    int val = currentStep;
-    Serial.println(val);
-    sprintf(payload, "%d", val);
-    packet.payload = (uint8_t *)payload;
-    packet.payloadlen = strlen(payload);
-    configure_response(packet);  
+    int myVal = currentStep;
+    packet.payloadlen = 2;
+    packet.payload[0] = highByte(myVal);
+    packet.payload[1] = lowByte(myVal);
+
+    // uint8_t val = currentStep;
+    // //Serial.println((const char*)&val);
+    // packet.payload = &val;
+    // packet.payloadlen = 1;
+    configure_response(packet); 
 
 }
 
