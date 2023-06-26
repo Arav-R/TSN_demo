@@ -15,7 +15,7 @@ namespace qn = qindesign::network;
 using namespace std;
 
 //Initialize network stack
-IPAddress IP_Addr(10, 1, 1, 59);
+IPAddress IP_Addr(10, 1, 1, 60);
 IPAddress netmask(255, 255, 255, 0);
 IPAddress gateway(10, 1, 1, 1);
 unsigned int localPort = 5683;
@@ -72,6 +72,14 @@ void setup_coap() {
   sprintf(buffer, "delay/cmd");
   Serial.println(buffer);
   coap.server(callback_delay_cmd, buffer);
+
+  sprintf(buffer, "speed/cmd");
+  Serial.println(buffer);
+  coap.server(callback_speed_cmd, buffer);
+
+  sprintf(buffer, "accel/cmd");
+  Serial.println(buffer);
+  coap.server(callback_accel_cmd, buffer);
 
   sprintf(buffer, "safe/cmd");
   Serial.println(buffer);
@@ -149,6 +157,13 @@ void loop() {
 
 
   //Serial.println(safe);
+  if (maxSpeed != prevSpeed){ //rising edge
+    stepper1.setMaxSpeed(maxSpeed); // Set maximum speed value for the stepper
+  }
+  if (accel != prevAccel){ //rising edge
+    stepper1.setAcceleration(accel); // Set acceleration value for the stepper
+  }
+  
   
   
   if (currentStep % stepsPerSlot == 0){
