@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include <QNEthernet.h>
 
-#include <coap-simple.h>
+#include "coap-simple.h"
 #include "pinout.h"
 
 #ifndef __CoAp__
@@ -14,11 +14,6 @@ extern int currentStep;
 extern int microStep;
 extern int stepsPerSlot;
 extern int delayMicro;
-
-extern int maxSpeed;
-extern int accel;
-extern int prevSpeed;
-extern int prevAccel;
 #endif
 
 //CoAP callbacks
@@ -32,9 +27,6 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port);
 
 void callback_microstep_cmd(CoapPacket &packet, String url, IPAddress ip, int port);
 void callback_delay_cmd(CoapPacket &packet, String url, IPAddress ip, int port);
-
-void callback_speed_cmd(CoapPacket &packet, String url, IPAddress ip, int port);
-void callback_accel_cmd(CoapPacket &packet, String url, IPAddress ip, int port);
 
 
 void callback_led_cmd(CoapPacket &packet, String url, IPAddress ip, int port);
