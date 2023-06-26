@@ -484,11 +484,20 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
     // clear out packet fields and craft response
     clear_packet(packet);
 
+    int lng = currentStep;                   // up to stupid big number
+    packet.payloadlen = 4;
+    packet.payload[0] = (byte) ((lng & 0xFF000000) >> 24 );
+    packet.payload[1] = (byte) ((lng & 0x00FF0000) >> 16 );
+    packet.payload[2] = (byte) ((lng & 0x0000FF00) >> 8  );
+    packet.payload[3] = (byte) ((lng & 0X000000FF)       );
 
-    int myVal = currentStep;
-    packet.payloadlen = 2;
-    packet.payload[0] = highByte(myVal);
-    packet.payload[1] = lowByte(myVal);
+
+
+    // int myVal = currentStep;     // WORKING up to 65,536
+    // packet.payloadlen = 2;
+    // packet.payload[0] = highByte(myVal);
+    // packet.payload[1] = lowByte(myVal);
+
 
     // uint8_t val = currentStep;
     // //Serial.println((const char*)&val);
