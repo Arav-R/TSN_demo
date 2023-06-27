@@ -475,12 +475,16 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
     // determine individual valve from url
     //int valve_num = get_index_from_url(url);
 
-    // copy payload
+  // copy payload
     char p[packet.payloadlen + 1] = {};
-    Serial.println(packet.payloadlen);
+    //Serial.println(packet.payloadlen);
     memcpy(p, packet.payload, packet.payloadlen);
     // p[packet.payloadlen] = NULL;
     String message(p);
+
+
+    // clear out packet fields and craft response
+    clear_packet(packet);
 
     // process PUT
     if (packet.code == COAP_PUT) {
@@ -511,7 +515,7 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
     packet.payload[2] = (byte) ((lng & 0x0000FF00) >> 8  );
     packet.payload[3] = (byte) ((lng & 0X000000FF)       );
 
-
+    Serial.print("Get steps"); 
 
     // int myVal = currentStep;     // WORKING up to 65,536
     // packet.payloadlen = 2;
