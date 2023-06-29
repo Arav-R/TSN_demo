@@ -475,6 +475,7 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
     // determine individual valve from url
     //int valve_num = get_index_from_url(url);
 
+  Serial.println("Received"); 
   // copy payload
     char p[packet.payloadlen + 1] = {};
     //Serial.println(packet.payloadlen);
@@ -482,15 +483,19 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
     // p[packet.payloadlen] = NULL;
     String message(p);
 
-
-    // clear out packet fields and craft response
-    clear_packet(packet);
+    Serial.println("Before put");
+  
 
     // process PUT
     if (packet.code == COAP_PUT) {
         Serial.println(message);
 
-        currentStep = message.toInt();
+        if (message.toInt() == -1) {
+
+        } else {
+          currentStep = message.toInt();
+        }
+        
 
         // for(int x = 0; x < message.toInt(); x++) {
         //   digitalWrite(pinOut_STEP,HIGH); 
@@ -502,15 +507,28 @@ void callback_total(CoapPacket &packet, String url, IPAddress ip, int port) {
         // }
         Serial.print("total steps: "); 
         Serial.println(message.toInt());
-    }    
+    }
+    Serial.println("After put");    
 
     // clear out packet fields and craft response
     // clear out packet fields and craft response
     clear_packet(packet);
 
+    Serial.println("After clear");
+
     long lng = currentStep;                   // up to stupid big number
+
+    Serial.print("lng: ");
+    Serial.println(lng);
     packet.payloadlen = 4;
+
+
+    Serial.println("test");
+    Serial.println((byte) ((lng & 0xFF000000) >> 24 ));
+    Serial.println(packet.payload[0]);
+    Serial.print("After payload access");
     packet.payload[0] = (byte) ((lng & 0xFF000000) >> 24 );
+    Serial.println("uno");
     packet.payload[1] = (byte) ((lng & 0x00FF0000) >> 16 );
     packet.payload[2] = (byte) ((lng & 0x0000FF00) >> 8  );
     packet.payload[3] = (byte) ((lng & 0X000000FF)       );
