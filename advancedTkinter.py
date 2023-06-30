@@ -199,7 +199,7 @@ class App(customtkinter.CTk):
         
         # spinbox_2.grid(row=6, column=0, padx=(20, 10), pady=(10, 10))
 
-        self.zero_label = customtkinter.CTkButton(self.control_frame, text="Zero Motors")
+        self.zero_label = customtkinter.CTkButton(self.control_frame, text="Zero Motors", command=self.zero_button_event)
         self.zero_label.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
 
 
@@ -210,7 +210,11 @@ class App(customtkinter.CTk):
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
 
-        
+    def zero_button_event(self):
+        # asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
+        # asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "0")) # = 0
+        print("zero")
+
     def speed_slider_callback(self, value):
         self.speed_label.configure(text="Speed: " + str(int(value)))
 
@@ -250,36 +254,6 @@ class App(customtkinter.CTk):
 
         global destroy
         destroy = True
-
-    def add_button_callback(self):
-        if self.command is not None:
-            self.command()
-        try:
-            value = float(self.entry.get()) + 1
-            self.entry.delete(0, "end")
-            self.entry.insert(0, value)
-        except ValueError:
-            return
-
-    def subtract_button_callback(self):
-        if self.command is not None:
-            self.command()
-        try:
-            value = float(self.entry.get()) - 1
-            self.entry.delete(0, "end")
-            self.entry.insert(0, value)
-        except ValueError:
-            return
-
-    def get(self) -> float:
-        try:
-            return float(self.entry.get())
-        except ValueError:
-            return None
-
-    def set(self, value: float):
-        self.entry.delete(0, "end")
-        self.entry.insert(0, str(float(value)))
 
 
 if __name__ == "__main__":
