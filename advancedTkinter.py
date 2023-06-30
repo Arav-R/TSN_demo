@@ -66,7 +66,7 @@ class FloatSpinbox(customtkinter.CTkFrame):
         # default value
         # self.entry.insert(0, "0.0")
 
-    def add_button_callback(self):
+    def add_button_callback(self, event=None):
         if self.command is not None:
             self.command()
         try:
@@ -82,7 +82,7 @@ class FloatSpinbox(customtkinter.CTkFrame):
         except ValueError:
             return
 
-    def subtract_button_callback(self):
+    def subtract_button_callback(self, event=None):
         if self.command is not None:
             self.command()
         try:
@@ -210,10 +210,14 @@ class App(customtkinter.CTk):
         spinbox_1 = FloatSpinbox(self.spinbox_frame, width=150, step_size=1, motor=1)
         spinbox_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10))
         spinbox_1.setLabel("Motor 1")
+        self.bind("<Down>", spinbox_1.add_button_callback)
+        self.bind("<Up>", spinbox_1.subtract_button_callback)
 
         spinbox_2 = FloatSpinbox(self.spinbox_frame, width=150, step_size=1, motor=2)
         spinbox_2.grid(row=0, column=1, padx=(20, 10), pady=(10, 10))
         spinbox_2.setLabel("Motor 2")
+        self.bind("<Left>", spinbox_2.add_button_callback)
+        self.bind("<Right>", spinbox_2.subtract_button_callback)
 
         # spinbox_1.set(35)
         # print(spinbox_1.get())
