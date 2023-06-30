@@ -120,6 +120,7 @@ class App(customtkinter.CTk):
 
         self.exit_button = customtkinter.CTkButton(self.sidebar_frame, command=self.exit_button_event, text="Exit")
         self.exit_button.grid(row=2, column=0, padx=20, pady=10)
+        self.bind("<Escape>", self.exit_button_event)
         
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
@@ -253,7 +254,7 @@ class App(customtkinter.CTk):
         print(on)
         # self.switchON.toggle()
     
-    def exit_button_event(self):
+    def exit_button_event(self, event=None):
         plt.close()
         app.destroy()
 
