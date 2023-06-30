@@ -18,6 +18,12 @@ motor2Step = 0
 destroy = False
 on = False
 
+NUM = 100
+TICK = 5
+PAN = 25
+
+motor1RoundTrip = []
+motor2RoundTrip = []
 
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -160,7 +166,7 @@ class App(customtkinter.CTk):
         self.cycle_label = customtkinter.CTkLabel(self.rightbar_frame, text="Cycle speed: 2000", font=customtkinter.CTkFont(size=20))
         self.cycle_label.grid(row=3, column=0, padx=20, pady=(10, 10))
 
-        self.graph_button = customtkinter.CTkButton(self.rightbar_frame, text="Graph", font=customtkinter.CTkFont(size=20))
+        self.graph_button = customtkinter.CTkButton(self.rightbar_frame, text="Graph", font=customtkinter.CTkFont(size=20), command=self.graph_button_event)
         self.graph_button.grid(row=4, column=0, padx=20, pady=(0, 10))
 
         # create slider and progressbar frame
@@ -215,6 +221,25 @@ class App(customtkinter.CTk):
     
     def space(self, event = None):
         self.switchON.toggle()
+
+    def graph_button_event(self):
+        print(motor1RoundTrip)
+        print(motor2RoundTrip)
+        
+
+        ypoints1 = np.array(motor1RoundTrip)
+        ypoints2 = np.array(motor2RoundTrip)
+
+        
+
+        plt.ion()
+        plt.autoscale()
+        plt.show()  
+
+        plt.plot(ypoints1, color="r")
+        plt.plot(ypoints2, color="b")
+        plt.draw()
+        plt.pause(0.001)
 
     def zero_button_event(self):
         # asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
@@ -272,6 +297,32 @@ if __name__ == "__main__":
         if destroy:
             print("destroy")
             break
+
+        # plotting
+        if plt.get_fignums():
+            # window(s) open
+            ypoints1 = np.array(motor1RoundTrip)
+            ypoints2 = np.array(motor2RoundTrip)
+
+            start = max(len(motor1RoundTrip) - PAN , 0)
+            end = start + PAN
+
+            # print(start)
+
+            
+
+            plt.ion()
+            plt.autoscale()
+            plt.show()  
+
+            plt.plot(ypoints1, color="r")
+            plt.plot(ypoints2, color="b")
+
+            plt.xlim([start, end])
+            # set ticks to 1
+            plt.xticks(np.arange(start, end, TICK))
+            plt.draw()
+            plt.pause(0.001)
 
         # step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
         # step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))     
