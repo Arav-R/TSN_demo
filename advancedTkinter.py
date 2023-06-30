@@ -35,6 +35,7 @@ class FloatSpinbox(customtkinter.CTkFrame):
                  width: int = 100,
                  height: int = 32,
                  step_size: Union[int, float] = 1,
+                 motor: int = 0,
                  command: Callable = None,
                  **kwargs):
         super().__init__(*args, width=width, height=height, **kwargs)
@@ -42,6 +43,7 @@ class FloatSpinbox(customtkinter.CTkFrame):
         self.step_size = step_size
         self.command = command
         self.value = 0.0
+        self.motor = motor
 
         self.configure(fg_color=("gray78", "gray28"))  # set frame color
 
@@ -68,8 +70,13 @@ class FloatSpinbox(customtkinter.CTkFrame):
         try:
             self.value += self.step_size
             print(self.value)
-            # self.entry.delete(0, "end")
-            # self.entry.insert(0, value)
+
+            # if (self.motor == 1) {
+            #     # asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", "1"))
+            # } else if (self.motor == 2) {
+            #     # asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", "1"))
+            # }
+        
         except ValueError:
             return
 
@@ -79,8 +86,13 @@ class FloatSpinbox(customtkinter.CTkFrame):
         try:
             self.value -= self.step_size
             print(self.value)
-            # self.entry.delete(0, "end")
-            # self.entry.insert(0, value)
+            
+            # if (self.motor == 1) {
+            #     # asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", "-1"))
+            # } else if (self.motor == 2) {
+            #     # asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", "-1"))
+            # }
+
         except ValueError:
             return
 
@@ -194,11 +206,11 @@ class App(customtkinter.CTk):
         self.spinbox_frame.grid_columnconfigure((0,1), weight=1)
         # self.spinbox_frame.grid_rowconfigure(4, weight=1)
         
-        spinbox_1 = FloatSpinbox(self.spinbox_frame, width=150, step_size=1)
+        spinbox_1 = FloatSpinbox(self.spinbox_frame, width=150, step_size=1, motor=1)
         spinbox_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10))
         spinbox_1.setLabel("Motor 1")
 
-        spinbox_2 = FloatSpinbox(self.spinbox_frame, width=150, step_size=1)
+        spinbox_2 = FloatSpinbox(self.spinbox_frame, width=150, step_size=1, motor=2)
         spinbox_2.grid(row=0, column=1, padx=(20, 10), pady=(10, 10))
         spinbox_2.setLabel("Motor 2")
 
