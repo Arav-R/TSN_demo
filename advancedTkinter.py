@@ -25,6 +25,8 @@ PAN = 25
 motor1RoundTrip = []
 motor2RoundTrip = []
 
+step = 1
+
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -197,7 +199,7 @@ class App(customtkinter.CTk):
         self.accel_slider.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
 
         self.option_var = customtkinter.StringVar(value="Full Step")
-        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.control_frame, values=["Full Step", "Half Step", "Quarter Step", "Eighth Step"], anchor="center", width=200, height=40, font=("Arial", 20))
+        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.control_frame, values=["Full Step", "Half Step", "Quarter Step", "Eighth Step"], command=self.microstep_callback, anchor="center", width=200, height=40, font=("Arial", 20))
         self.optionmenu_1.grid(row=4, column=0, padx=(20, 10), pady=(10, 10))
         self.optionmenu_1.set("MicroSteps")
 
@@ -234,6 +236,28 @@ class App(customtkinter.CTk):
     def space(self, event = None):
         self.switchON.toggle()
 
+    def microstep_callback(self, value):
+        global step
+        if value == "Full Step":
+        # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "1"))
+        # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "1"))
+            step = 1
+
+        elif value == "Half Step":
+            # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "2"))
+            # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "2"))
+            step = 2
+
+        elif value == "Quarter Step":
+            # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "4"))
+            # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "4"))
+            step = 4
+        elif value == "Eighth Step":
+            # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "8"))
+            # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "8"))
+            step = 8
+        print(value)
+    
     def graph_button_event(self):
         print(motor1RoundTrip)
         print(motor2RoundTrip)
