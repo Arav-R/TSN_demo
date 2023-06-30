@@ -167,7 +167,7 @@ class App(customtkinter.CTk):
         self.control_frame.grid_rowconfigure(4, weight=1)
         self.speed_label = customtkinter.CTkLabel(self.control_frame, text="Speed")
         self.speed_label.grid(row=0, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.speed_slider = customtkinter.CTkSlider(self.control_frame)
+        self.speed_slider = customtkinter.CTkSlider(self.control_frame, from_=0, to=2000, number_of_steps= 100, command=self.speed_slider_callback)
         self.speed_slider.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
 
         self.accel_label = customtkinter.CTkLabel(self.control_frame, text="Acceleration")
@@ -211,7 +211,10 @@ class App(customtkinter.CTk):
         self.scaling_optionemenu.set("100%")
 
         
-        
+    def speed_slider_callback(self, value):
+        self.speed_label.configure(text="Speed: " + str(int(value)))
+        print(value)
+
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
         print("CTkInputDialog:", dialog.get_input())
