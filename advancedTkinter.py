@@ -267,4 +267,8 @@ if __name__ == "__main__":
             print("destroy")
             break
 
+        # step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
+        # step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))     
+        # app.motor1_label.configure(text="Motor 1: " + str(int.from_bytes(step1.payload, "big")))
+        # app.motor2_label.configure(text="Motor 1: " + str(int.from_bytes(step1.payload, "big")))
         
