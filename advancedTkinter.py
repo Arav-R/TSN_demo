@@ -16,6 +16,7 @@ motor1Step = 0
 motor2Step = 0
 
 destroy = False
+on = False
 
 
 
@@ -111,7 +112,9 @@ class App(customtkinter.CTk):
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="TSN Demo", font=customtkinter.CTkFont(size=24, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.switchON = customtkinter.CTkSwitch(self.sidebar_frame, command=self.sidebar_button_event, text="ON", switch_width=90, switch_height= 40, width=80, height= 75, font=("Arial", 20))
+
+        switch_var = customtkinter.StringVar(value="off")
+        self.switchON = customtkinter.CTkSwitch(self.sidebar_frame, command=self.on_switch_event, text="ON", switch_width=90, switch_height= 40, width=80, height= 75, font=("Arial", 20), onvalue="on", offvalue="off", variable=switch_var)
         self.switchON.grid(row=1, column=0, padx=(15,0), pady=10)
         self.exit_button = customtkinter.CTkButton(self.sidebar_frame, command=self.exit_button_event, text="Exit")
         self.exit_button.grid(row=2, column=0, padx=20, pady=10)
@@ -220,8 +223,14 @@ class App(customtkinter.CTk):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
-    def sidebar_button_event(self):
-        print("sidebar_button click")
+    def on_switch_event(self):
+        global on
+        if on:
+            on = False
+        else:
+            on = True
+        print(on)
+        # self.switchON.toggle()
     
     def exit_button_event(self):
         plt.close()
@@ -271,3 +280,5 @@ if __name__ == "__main__":
         if destroy:
             print("destroy")
             break
+
+        
