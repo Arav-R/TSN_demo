@@ -29,49 +29,51 @@ class FloatSpinbox(customtkinter.CTkFrame):
         self.grid_columnconfigure((0, 2), weight=0)  # buttons don't expand
         self.grid_columnconfigure(1, weight=1)  # entry expands
 
-        self.subtract_button = customtkinter.CTkButton(self, text="-", width=height-6, height=height-6,
-                                                       command=self.subtract_button_callback)
+        self.subtract_button = customtkinter.CTkButton(self, text="-", width=height-6, height=height-6)
         self.subtract_button.grid(row=0, column=0, padx=(3, 0), pady=3)
 
-        self.entry = customtkinter.CTkEntry(self, width=width-(2*height), height=height-6, border_width=0)
-        self.entry.grid(row=0, column=1, columnspan=1, padx=3, pady=3, sticky="ew")
+        # self.entry = customtkinter.CTkEntry(self, width=width-(2*height), height=height-6, border_width=0)
+        # self.entry.grid(row=0, column=1, columnspan=1, padx=3, pady=3, sticky="ew")
+        self.label = customtkinter.CTkLabel(self, width=width-(2*height), height=height-6, anchor="center", font=("Arial", 15))
+        self.label.grid(row=0, column=1, columnspan=1, padx=3, pady=3, sticky="ew")
 
-        self.add_button = customtkinter.CTkButton(self, text="+", width=height-6, height=height-6,
-                                                  command=self.add_button_callback)
+        self.add_button = customtkinter.CTkButton(self, text="+", width=height-6, height=height-6)
         self.add_button.grid(row=0, column=2, padx=(0, 3), pady=3)
 
         # default value
-        self.entry.insert(0, "0.0")
+        # self.entry.insert(0, "0.0")
 
-    def add_button_callback(self):
-        if self.command is not None:
-            self.command()
-        try:
-            value = float(self.entry.get()) + self.step_size
-            self.entry.delete(0, "end")
-            self.entry.insert(0, value)
-        except ValueError:
-            return
+    # def add_button_callback(self):
+    #     if self.command is not None:
+    #         self.command()
+    #     try:
+    #         value = float(self.entry.get()) + self.step_size
+    #         self.entry.delete(0, "end")
+    #         self.entry.insert(0, value)
+    #     except ValueError:
+    #         return
 
-    def subtract_button_callback(self):
-        if self.command is not None:
-            self.command()
-        try:
-            value = float(self.entry.get()) - self.step_size
-            self.entry.delete(0, "end")
-            self.entry.insert(0, value)
-        except ValueError:
-            return
+    # def subtract_button_callback(self):
+    #     if self.command is not None:
+    #         self.command()
+    #     try:
+    #         value = float(self.entry.get()) - self.step_size
+    #         self.entry.delete(0, "end")
+    #         self.entry.insert(0, value)
+    #     except ValueError:
+    #         return
 
-    def get(self) -> Union[float, None]:
-        try:
-            return float(self.entry.get())
-        except ValueError:
-            return None
+    # def get(self) -> Union[float, None]:
+    #     try:
+    #         return float(self.entry.get())
+    #     except ValueError:
+    #         return None
 
-    def set(self, value: float):
-        self.entry.delete(0, "end")
-        self.entry.insert(0, str(float(value)))
+    # def set(self, value: float):
+    #     self.entry.delete(0, "end")
+    #     self.entry.insert(0, str(float(value)))
+    def setLabel(self, name: str):
+        self.label.configure(text=name)
 
 
 class App(customtkinter.CTk):
@@ -162,18 +164,20 @@ class App(customtkinter.CTk):
         self.optionmenu_1.set("MicroSteps")
 
         self.spinbox_frame = customtkinter.CTkFrame(self.control_frame, fg_color="transparent", )
-        self.spinbox_frame.grid(row=5, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.spinbox_frame.grid(row=5, column=0, padx=(15, 0), pady=(20, 0), sticky="nsew")
         self.spinbox_frame.grid_columnconfigure((0,1), weight=1)
         # self.spinbox_frame.grid_rowconfigure(4, weight=1)
         
         spinbox_1 = FloatSpinbox(self.spinbox_frame, width=150, step_size=3)
         spinbox_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10))
+        spinbox_1.setLabel("Motor 1")
 
         spinbox_2 = FloatSpinbox(self.spinbox_frame, width=150, step_size=3)
         spinbox_2.grid(row=0, column=1, padx=(20, 10), pady=(10, 10))
+        spinbox_2.setLabel("Motor 2")
 
-        spinbox_1.set(35)
-        print(spinbox_1.get())
+        # spinbox_1.set(35)
+        # print(spinbox_1.get())
 
         
         # spinbox_2.grid(row=6, column=0, padx=(20, 10), pady=(10, 10))
