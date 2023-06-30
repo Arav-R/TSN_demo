@@ -116,6 +116,8 @@ class App(customtkinter.CTk):
         switch_var = customtkinter.StringVar(value="off")
         self.switchON = customtkinter.CTkSwitch(self.sidebar_frame, command=self.on_switch_event, text="ON", switch_width=90, switch_height= 40, width=80, height= 75, font=("Arial", 20), onvalue="on", offvalue="off", variable=switch_var)
         self.switchON.grid(row=1, column=0, padx=(15,0), pady=10)
+        self.bind("<space>", self.space)
+
         self.exit_button = customtkinter.CTkButton(self.sidebar_frame, command=self.exit_button_event, text="Exit")
         self.exit_button.grid(row=2, column=0, padx=20, pady=10)
         
@@ -209,6 +211,9 @@ class App(customtkinter.CTk):
 
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
+    
+    def space(self, event = None):
+        self.switchON.toggle()
 
     def zero_button_event(self):
         # asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
