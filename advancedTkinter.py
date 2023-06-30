@@ -1,0 +1,236 @@
+import tkinter
+import tkinter.messagebox
+import customtkinter
+from typing import Callable, Union
+
+motor1Step = 0
+motor2Step = 0
+
+
+
+customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
+
+class FloatSpinbox(customtkinter.CTkFrame):
+    def __init__(self, *args,
+                 width: int = 100,
+                 height: int = 32,
+                 step_size: Union[int, float] = 1,
+                 command: Callable = None,
+                 **kwargs):
+        super().__init__(*args, width=width, height=height, **kwargs)
+
+        self.step_size = step_size
+        self.command = command
+
+        self.configure(fg_color=("gray78", "gray28"))  # set frame color
+
+        self.grid_columnconfigure((0, 2), weight=0)  # buttons don't expand
+        self.grid_columnconfigure(1, weight=1)  # entry expands
+
+        self.subtract_button = customtkinter.CTkButton(self, text="-", width=height-6, height=height-6,
+                                                       command=self.subtract_button_callback)
+        self.subtract_button.grid(row=0, column=0, padx=(3, 0), pady=3)
+
+        self.entry = customtkinter.CTkEntry(self, width=width-(2*height), height=height-6, border_width=0)
+        self.entry.grid(row=0, column=1, columnspan=1, padx=3, pady=3, sticky="ew")
+
+        self.add_button = customtkinter.CTkButton(self, text="+", width=height-6, height=height-6,
+                                                  command=self.add_button_callback)
+        self.add_button.grid(row=0, column=2, padx=(0, 3), pady=3)
+
+        # default value
+        self.entry.insert(0, "0.0")
+
+    def add_button_callback(self):
+        if self.command is not None:
+            self.command()
+        try:
+            value = float(self.entry.get()) + self.step_size
+            self.entry.delete(0, "end")
+            self.entry.insert(0, value)
+        except ValueError:
+            return
+
+    def subtract_button_callback(self):
+        if self.command is not None:
+            self.command()
+        try:
+            value = float(self.entry.get()) - self.step_size
+            self.entry.delete(0, "end")
+            self.entry.insert(0, value)
+        except ValueError:
+            return
+
+    def get(self) -> Union[float, None]:
+        try:
+            return float(self.entry.get())
+        except ValueError:
+            return None
+
+    def set(self, value: float):
+        self.entry.delete(0, "end")
+        self.entry.insert(0, str(float(value)))
+
+
+class App(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
+
+
+
+        # configure window
+        self.title("CustomTkinter complex_example.py")
+        self.geometry(f"{1100}x{580}")
+
+        # configure grid layout (4x4)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure((2), weight=0)
+        self.grid_rowconfigure((0, 1, 2), weight=1)
+
+        # create sidebar frame with widgets
+        self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
+        self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
+        self.sidebar_frame.grid_rowconfigure(4, weight=1)
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="TSN Demo", font=customtkinter.CTkFont(size=24, weight="bold"))
+        self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
+        self.switchON = customtkinter.CTkSwitch(self.sidebar_frame, command=self.sidebar_button_event, text="ON", switch_width=90, switch_height= 40, width=80, height= 75, font=("Arial", 20))
+        self.switchON.grid(row=1, column=0, padx=(15,0), pady=10)
+        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Exit")
+        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
+        
+        self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
+        self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
+        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
+                                                                       command=self.change_appearance_mode_event)
+        self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
+        self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
+        self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
+        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%", "150%"],
+                                                               command=self.change_scaling_event)
+        self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
+
+        # create main entry and button
+        # self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntry")
+        # self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
+
+        # self.main_button_1 = customtkinter.CTkButton(master=self, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
+        # self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+
+        # create textbox
+
+        # create tabview
+        
+
+        # create radiobutton frame
+        self.rightbar_frame = customtkinter.CTkFrame(self, width=500, corner_radius=0)
+        self.rightbar_frame.grid(row=0, column=2, rowspan=4, sticky="nsew")
+        self.rightbar_frame.grid_rowconfigure(4, weight=1)
+        self.telem_label = customtkinter.CTkLabel(self.rightbar_frame, text="Telemetry", font=customtkinter.CTkFont(size=24, weight="bold"))
+        self.telem_label.grid(row=0, column=0, padx=20, pady=(20, 10))
+
+        self.motor1_label = customtkinter.CTkLabel(self.rightbar_frame, text="Motor 1: " + str(motor1Step), font=customtkinter.CTkFont(size=20))
+        self.motor1_label.grid(row=1, column=0, padx=20, pady=(10, 10))
+        self.motor2_label = customtkinter.CTkLabel(self.rightbar_frame, text="Motor 2: " + str(motor2Step), font=customtkinter.CTkFont(size=20))
+        self.motor2_label.grid(row=2, column=0, padx=20, pady=(10, 10))
+
+        self.cycle_label = customtkinter.CTkLabel(self.rightbar_frame, text="Cycle speed: 2000", font=customtkinter.CTkFont(size=20))
+        self.cycle_label.grid(row=3, column=0, padx=20, pady=(10, 10))
+
+        self.graph_button = customtkinter.CTkButton(self.rightbar_frame, text="Graph", font=customtkinter.CTkFont(size=20))
+        self.graph_button.grid(row=4, column=0, padx=20, pady=(0, 10))
+
+        # create slider and progressbar frame
+        self.control_frame = customtkinter.CTkFrame(self, fg_color="transparent")
+        self.control_frame.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.control_frame.grid_columnconfigure(0, weight=1)
+        self.control_frame.grid_rowconfigure(4, weight=1)
+        self.speed_label = customtkinter.CTkLabel(self.control_frame, text="Speed")
+        self.speed_label.grid(row=0, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.speed_slider = customtkinter.CTkSlider(self.control_frame)
+        self.speed_slider.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+
+        self.accel_label = customtkinter.CTkLabel(self.control_frame, text="Acceleration")
+        self.accel_label.grid(row=2, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.accel_slider = customtkinter.CTkSlider(self.control_frame)
+        self.accel_slider.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+
+        self.option_var = customtkinter.StringVar(value="Full Step")
+        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.control_frame, values=["Full Step", "Half Step", "Quarter Step", "Eighth Step"], anchor="center", width=200, height=40, font=("Arial", 20))
+        self.optionmenu_1.grid(row=4, column=0, padx=(20, 10), pady=(10, 10))
+        self.optionmenu_1.set("MicroSteps")
+
+        
+        spinbox_1 = FloatSpinbox(self.control_frame, width=150, step_size=3)
+        self.spinbox_1.grid(row=5, column=0, padx=(20, 10), pady=(10, 10))
+
+        spinbox_1.set(35)
+        print(spinbox_1.get())
+
+        
+        # spinbox_2.grid(row=6, column=0, padx=(20, 10), pady=(10, 10))
+
+        self.accel_label = customtkinter.CTkButton(self.control_frame, text="Zero Motors")
+        self.accel_label.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
+
+
+
+        # set default values
+        
+
+        self.appearance_mode_optionemenu.set("Dark")
+        self.scaling_optionemenu.set("100%")
+
+        
+        
+    def open_input_dialog_event(self):
+        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
+        print("CTkInputDialog:", dialog.get_input())
+
+    def change_appearance_mode_event(self, new_appearance_mode: str):
+        customtkinter.set_appearance_mode(new_appearance_mode)
+
+    def change_scaling_event(self, new_scaling: str):
+        new_scaling_float = int(new_scaling.replace("%", "")) / 100
+        customtkinter.set_widget_scaling(new_scaling_float)
+
+    def sidebar_button_event(self):
+        print("sidebar_button click")
+
+    def add_button_callback(self):
+        if self.command is not None:
+            self.command()
+        try:
+            value = float(self.entry.get()) + 1
+            self.entry.delete(0, "end")
+            self.entry.insert(0, value)
+        except ValueError:
+            return
+
+    def subtract_button_callback(self):
+        if self.command is not None:
+            self.command()
+        try:
+            value = float(self.entry.get()) - 1
+            self.entry.delete(0, "end")
+            self.entry.insert(0, value)
+        except ValueError:
+            return
+
+    def get(self) -> float:
+        try:
+            return float(self.entry.get())
+        except ValueError:
+            return None
+
+    def set(self, value: float):
+        self.entry.delete(0, "end")
+        self.entry.insert(0, str(float(value)))
+
+
+if __name__ == "__main__":
+
+    print()
+    app = App()
+    app.mainloop()
