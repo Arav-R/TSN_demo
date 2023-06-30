@@ -285,6 +285,8 @@ class App(customtkinter.CTk):
         asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
         asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "0")) # = 0
         print("zero")
+        self.motor1_label.configure(text="Motor 1: " + str(0))
+        self.motor2_label.configure(text="Motor 2: " + str(0))
 
     def speed_slider_callback(self, value):
         self.speed_label.configure(text="Speed: " + str(int(value)))
@@ -329,6 +331,10 @@ class App(customtkinter.CTk):
 
 if __name__ == "__main__":
 
+    step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
+    step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))
+
+
     print()
     app = App()
     while True:
@@ -364,12 +370,14 @@ if __name__ == "__main__":
             plt.draw()
             plt.pause(0.001)
 
-        step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
-        step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))     
+        # step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
+        # step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))     
         app.motor1_label.configure(text="Motor 1: " + str(int.from_bytes(step1.payload, "big")))
         app.motor2_label.configure(text="Motor 2: " + str(int.from_bytes(step1.payload, "big")))
 
         if on:
+
+            time.sleep(.2)
             cycleStart = time.time()
 
             first = time.time()
@@ -394,7 +402,7 @@ if __name__ == "__main__":
                 net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
                 bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
                 
-            
+            time.sleep(.2)
 
             first = time.time()
             asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", str(25*int(step))))
@@ -419,4 +427,6 @@ if __name__ == "__main__":
             cycleTime = time.time() - cycleStart
             num = round(1/cycleTime, 2)
             app.cycle_label.configure(text="Cycle Speed: " +   f'{num:.2f}'   + " Hz")
+
+            
             

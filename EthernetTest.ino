@@ -15,7 +15,7 @@ namespace qn = qindesign::network;
 using namespace std;
 
 //Initialize network stack
-IPAddress IP_Addr(10, 1, 1, 59);
+IPAddress IP_Addr(10, 1, 1, 60);
 IPAddress netmask(255, 255, 255, 0);
 IPAddress gateway(10, 1, 1, 1);
 unsigned int localPort = 5683;
@@ -148,6 +148,7 @@ void setup() {
 void loop() {
 
   //digitalWrite(pinOut_MS1,HIGH);
+  stepsPerSlot = 25 * microStep;
 
   
   // put your main code here, to run repeatedly:
@@ -166,9 +167,7 @@ void loop() {
   
   
   
-  if (currentStep % stepsPerSlot == 0){
-             safe = true;
-     } 
+  
   stepper1.move(target * reverse);
   while(stepper1.currentPosition() != target * reverse) {
           stepper1.run();
@@ -179,4 +178,13 @@ void loop() {
       }
   stepper1.setCurrentPosition(0); // reset
   target = 0;
+
+
+  if (currentStep % stepsPerSlot == 0){
+            //  Serial.print("Current Step: ");
+            //  Serial.println(currentStep);
+            //  Serial.print("Steps per Slot: ");
+            //  Serial.println(stepsPerSlot);
+             safe = true;
+     } 
 }
