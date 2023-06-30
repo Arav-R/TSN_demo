@@ -227,6 +227,7 @@ class App(customtkinter.CTk):
 
         self.zero_label = customtkinter.CTkButton(self.control_frame, text="Zero Motors", command=self.zero_button_event)
         self.zero_label.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
+        self.bind("<Return>", self.zero_button_event)
 
 
 
@@ -280,7 +281,7 @@ class App(customtkinter.CTk):
         plt.draw()
         plt.pause(0.001)
 
-    def zero_button_event(self):
+    def zero_button_event(self, event=None):
         asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
         asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "0")) # = 0
         print("zero")
