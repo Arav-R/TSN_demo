@@ -161,9 +161,16 @@ class App(customtkinter.CTk):
         self.optionmenu_1.grid(row=4, column=0, padx=(20, 10), pady=(10, 10))
         self.optionmenu_1.set("MicroSteps")
 
+        self.spinbox_frame = customtkinter.CTkFrame(self.control_frame, fg_color="transparent", )
+        self.spinbox_frame.grid(row=5, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.spinbox_frame.grid_columnconfigure((0,1), weight=1)
+        # self.spinbox_frame.grid_rowconfigure(4, weight=1)
         
-        spinbox_1 = FloatSpinbox(self.control_frame, width=150, step_size=3)
-        self.spinbox_1.grid(row=5, column=0, padx=(20, 10), pady=(10, 10))
+        spinbox_1 = FloatSpinbox(self.spinbox_frame, width=150, step_size=3)
+        spinbox_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10))
+
+        spinbox_2 = FloatSpinbox(self.spinbox_frame, width=150, step_size=3)
+        spinbox_2.grid(row=0, column=1, padx=(20, 10), pady=(10, 10))
 
         spinbox_1.set(35)
         print(spinbox_1.get())
