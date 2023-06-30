@@ -8,7 +8,7 @@ import numpy as np
 
 
 import customtkinter
-# import coap_client
+import coap_client
 import time
 import asyncio
 
@@ -73,11 +73,11 @@ class FloatSpinbox(customtkinter.CTkFrame):
             self.value += self.step_size
             print(self.value)
 
-            # if (self.motor == 1) {
-            #     # asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", "1"))
-            # } else if (self.motor == 2) {
-            #     # asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", "1"))
-            # }
+            if (self.motor == 1):
+                asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", "1"))
+            elif (self.motor == 2):
+                asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", "1"))
+            
         
         except ValueError:
             return
@@ -89,11 +89,10 @@ class FloatSpinbox(customtkinter.CTkFrame):
             self.value -= self.step_size
             print(self.value)
             
-            # if (self.motor == 1) {
-            #     # asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", "-1"))
-            # } else if (self.motor == 2) {
-            #     # asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", "-1"))
-            # }
+            if (self.motor == 1):
+                asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", "-1"))
+            elif (self.motor == 2):
+                asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", "-1"))
 
         except ValueError:
             return
@@ -166,7 +165,7 @@ class App(customtkinter.CTk):
         
 
         # create radiobutton frame
-        self.rightbar_frame = customtkinter.CTkFrame(self, width=500, corner_radius=0)
+        self.rightbar_frame = customtkinter.CTkFrame(self, width=800, corner_radius=0, border_width= 800)
         self.rightbar_frame.grid(row=0, column=2, rowspan=4, sticky="nsew")
         self.rightbar_frame.grid_rowconfigure(4, weight=1)
         self.telem_label = customtkinter.CTkLabel(self.rightbar_frame, text="Telemetry", font=customtkinter.CTkFont(size=24, weight="bold"))
@@ -177,8 +176,8 @@ class App(customtkinter.CTk):
         self.motor2_label = customtkinter.CTkLabel(self.rightbar_frame, text="Motor 2: " + str(motor2Step), font=customtkinter.CTkFont(size=20))
         self.motor2_label.grid(row=2, column=0, padx=20, pady=(10, 10))
 
-        self.cycle_label = customtkinter.CTkLabel(self.rightbar_frame, text="Cycle speed: 2000", font=customtkinter.CTkFont(size=20))
-        self.cycle_label.grid(row=3, column=0, padx=20, pady=(10, 10))
+        self.cycle_label = customtkinter.CTkLabel(self.rightbar_frame, text="Cycle speed: 0 Hz", font=customtkinter.CTkFont(size=20), width= 100, anchor="w", padx=25)
+        self.cycle_label.grid(row=3, column=0, padx=5, pady=(10, 10))
 
         self.graph_button = customtkinter.CTkButton(self.rightbar_frame, text="Graph", font=customtkinter.CTkFont(size=20), command=self.graph_button_event)
         self.graph_button.grid(row=4, column=0, padx=20, pady=(0, 10))
@@ -239,22 +238,22 @@ class App(customtkinter.CTk):
     def microstep_callback(self, value):
         global step
         if value == "Full Step":
-        # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "1"))
-        # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "1"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "1"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "1"))
             step = 1
 
         elif value == "Half Step":
-            # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "2"))
-            # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "2"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "2"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "2"))
             step = 2
 
         elif value == "Quarter Step":
-            # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "4"))
-            # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "4"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "4"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "4"))
             step = 4
         elif value == "Eighth Step":
-            # asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "8"))
-            # asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "8"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "8"))
+            asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "8"))
             step = 8
         print(value)
     
@@ -278,21 +277,21 @@ class App(customtkinter.CTk):
         plt.pause(0.001)
 
     def zero_button_event(self):
-        # asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
-        # asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "0")) # = 0
+        asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
+        asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "0")) # = 0
         print("zero")
 
     def speed_slider_callback(self, value):
         self.speed_label.configure(text="Speed: " + str(int(value)))
 
-        # asyncio.run(coap_client.single_put("coap://10.1.1.59/speed/cmd", str(int(value))))
-        # asyncio.run(coap_client.single_put("coap://10.1.1.60/speed/cmd", str(int(value))))
+        asyncio.run(coap_client.single_put("coap://10.1.1.59/speed/cmd", str(int(value))))
+        asyncio.run(coap_client.single_put("coap://10.1.1.60/speed/cmd", str(int(value))))
         print(value)
     def accel_slider_callback(self, value):
         self.accel_label.configure(text="Acceleration: " + str(int(value)))
 
-        # asyncio.run(coap_client.single_put("coap://10.1.1.59/speed/cmd", str(int(value))))
-        # asyncio.run(coap_client.single_put("coap://10.1.1.60/speed/cmd", str(int(value))))
+        asyncio.run(coap_client.single_put("coap://10.1.1.59/accel/cmd", str(int(value))))
+        asyncio.run(coap_client.single_put("coap://10.1.1.60/accel/cmd", str(int(value))))
         print(value)
 
     def open_input_dialog_event(self):
@@ -360,8 +359,59 @@ if __name__ == "__main__":
             plt.draw()
             plt.pause(0.001)
 
-        # step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
-        # step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))     
-        # app.motor1_label.configure(text="Motor 1: " + str(int.from_bytes(step1.payload, "big")))
-        # app.motor2_label.configure(text="Motor 1: " + str(int.from_bytes(step1.payload, "big")))
-        
+        step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
+        step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))     
+        app.motor1_label.configure(text="Motor 1: " + str(int.from_bytes(step1.payload, "big")))
+        app.motor2_label.configure(text="Motor 2: " + str(int.from_bytes(step1.payload, "big")))
+
+        if on:
+            cycleStart = time.time()
+
+            first = time.time()
+            asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", str(25*int(step))))
+            seconds = time.time()
+            y = seconds - first
+            motor1RoundTrip.append(y)
+
+            
+
+            step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
+            step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))
+
+
+            ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
+            net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
+            bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
+            while (bet != 1):
+                app.update()
+                
+                ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
+                net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
+                bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
+                
+            
+
+            first = time.time()
+            asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", str(25*int(step))))
+            seconds = time.time()
+            y = seconds - first
+            motor2RoundTrip.append(y)
+            
+            step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
+            step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))
+
+
+            ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
+            net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
+            bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
+            while (int.from_bytes(ret.payload, "big") != 1):
+                app.update()
+
+                ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
+                net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
+                bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
+            
+            cycleTime = time.time() - cycleStart
+            num = round(1/cycleTime, 2)
+            app.cycle_label.configure(text="Cycle Speed: " +   f'{num:.2f}'   + " Hz")
+            
