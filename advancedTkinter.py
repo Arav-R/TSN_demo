@@ -3,8 +3,19 @@ import tkinter.messagebox
 import customtkinter
 from typing import Callable, Union
 
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+import customtkinter
+# import coap_client
+import time
+import asyncio
+
 motor1Step = 0
 motor2Step = 0
+
+destroy = False
 
 
 
@@ -102,8 +113,8 @@ class App(customtkinter.CTk):
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
         self.switchON = customtkinter.CTkSwitch(self.sidebar_frame, command=self.sidebar_button_event, text="ON", switch_width=90, switch_height= 40, width=80, height= 75, font=("Arial", 20))
         self.switchON.grid(row=1, column=0, padx=(15,0), pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Exit")
-        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
+        self.exit_button = customtkinter.CTkButton(self.sidebar_frame, command=self.exit_button_event, text="Exit")
+        self.exit_button.grid(row=2, column=0, padx=20, pady=10)
         
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
@@ -211,6 +222,13 @@ class App(customtkinter.CTk):
 
     def sidebar_button_event(self):
         print("sidebar_button click")
+    
+    def exit_button_event(self):
+        plt.close()
+        app.destroy()
+
+        global destroy
+        destroy = True
 
     def add_button_callback(self):
         if self.command is not None:
@@ -247,4 +265,9 @@ if __name__ == "__main__":
 
     print()
     app = App()
-    app.mainloop()
+    while True:
+        app.update()
+
+        if destroy:
+            print("destroy")
+            break
