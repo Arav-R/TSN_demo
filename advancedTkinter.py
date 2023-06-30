@@ -172,7 +172,7 @@ class App(customtkinter.CTk):
 
         self.accel_label = customtkinter.CTkLabel(self.control_frame, text="Acceleration")
         self.accel_label.grid(row=2, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.accel_slider = customtkinter.CTkSlider(self.control_frame)
+        self.accel_slider = customtkinter.CTkSlider(self.control_frame, from_=0, to=10000, number_of_steps= 100, command=self.accel_slider_callback)
         self.accel_slider.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
 
         self.option_var = customtkinter.StringVar(value="Full Step")
@@ -199,8 +199,8 @@ class App(customtkinter.CTk):
         
         # spinbox_2.grid(row=6, column=0, padx=(20, 10), pady=(10, 10))
 
-        self.accel_label = customtkinter.CTkButton(self.control_frame, text="Zero Motors")
-        self.accel_label.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
+        self.zero_label = customtkinter.CTkButton(self.control_frame, text="Zero Motors")
+        self.zero_label.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
 
 
 
@@ -213,6 +213,15 @@ class App(customtkinter.CTk):
         
     def speed_slider_callback(self, value):
         self.speed_label.configure(text="Speed: " + str(int(value)))
+
+        # asyncio.run(coap_client.single_put("coap://10.1.1.59/speed/cmd", str(int(value))))
+        # asyncio.run(coap_client.single_put("coap://10.1.1.60/speed/cmd", str(int(value))))
+        print(value)
+    def accel_slider_callback(self, value):
+        self.accel_label.configure(text="Acceleration: " + str(int(value)))
+
+        # asyncio.run(coap_client.single_put("coap://10.1.1.59/speed/cmd", str(int(value))))
+        # asyncio.run(coap_client.single_put("coap://10.1.1.60/speed/cmd", str(int(value))))
         print(value)
 
     def open_input_dialog_event(self):
