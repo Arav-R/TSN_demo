@@ -481,6 +481,10 @@ if __name__ == "__main__":
                 ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
                 net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
                 bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
+
+                if destroy:
+                    # print("destroy")
+                    break
                 
             # time.sleep(.2)
 
@@ -503,6 +507,10 @@ if __name__ == "__main__":
                 ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
                 net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
                 bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
+
+                if destroy:
+                    # print("destroy")
+                    break
             
             cycleTime = time.time() - cycleStart
             num = round(1/cycleTime, 2)
