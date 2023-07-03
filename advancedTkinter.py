@@ -12,6 +12,8 @@ import coap_client
 import time
 import asyncio
 
+run_once = 0
+
 motor1Step = 0
 motor2Step = 0
 
@@ -245,6 +247,7 @@ class App(customtkinter.CTk):
         self.switchON.toggle()
 
     def microstep_callback(self, value):
+        print(value)
         global step
         if value == "Full Step":
             asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "1"))
@@ -320,7 +323,7 @@ class App(customtkinter.CTk):
             # self.accel_label.configure(text="Acceleration: " + str(int(self.accel_slider.get())))
 
             step = 8
-        print(value)
+        
     
     def graph_button_event(self):
         print(motor1RoundTrip)
@@ -429,14 +432,23 @@ if __name__ == "__main__":
             plt.autoscale()
             plt.show()  
 
-            plt.plot(ypoints1, color="r")
-            plt.plot(ypoints2, color="b")
+            if run_once == 0:
+                plt.plot(ypoints1, color="r", label="Motor 1")
+                plt.plot(ypoints2, color="b", label="Motor 2")
+                plt.legend(loc = "upper center")
+                run_once = 1
+            else: 
+                plt.plot(ypoints1, color="r")
+                plt.plot(ypoints2, color="b")
+            # plt.legend(loc = "upper center")
 
             plt.xlim([start, end])
             # set ticks to 1
             plt.xticks(np.arange(start, end, TICK))
             plt.draw()
             plt.pause(0.001)
+        else:
+            run_once = 0
 
         # step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
         # step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))     
