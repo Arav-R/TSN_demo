@@ -249,20 +249,76 @@ class App(customtkinter.CTk):
         if value == "Full Step":
             asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "1"))
             asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "1"))
+            
+
+            self.speed_slider.configure(to=3000)
+            self.accel_slider.configure(to=17500)
+
+            self.speed_slider.set(self.speed_slider.get()*1/step)
+            self.accel_slider.set(self.accel_slider.get()*1/step)
+
+            self.speed_slider_callback(self.speed_slider.get())
+            self.accel_slider_callback(self.accel_slider.get())
+
+            # self.speed_label.configure(text="Speed: " + str(int(self.speed_slider.get())))
+            # self.accel_label.configure(text="Acceleration: " + str(int(self.accel_slider.get())))
+
             step = 1
 
         elif value == "Half Step":
             asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "2"))
             asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "2"))
+            
+
+            self.speed_slider.configure(to=3000*2)
+            self.accel_slider.configure(to=17500*2)
+
+            self.speed_slider.set(self.speed_slider.get()*2/step)
+            self.accel_slider.set(self.accel_slider.get()*2/step)
+
+            self.speed_slider_callback(self.speed_slider.get())
+            self.accel_slider_callback(self.accel_slider.get())
+            
+            # self.speed_label.configure(text="Speed: " + str(int(self.speed_slider.get())))
+            # self.accel_label.configure(text="Acceleration: " + str(int(self.accel_slider.get())))
+
             step = 2
 
         elif value == "Quarter Step":
             asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "4"))
             asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "4"))
+            
+
+            self.speed_slider.configure(to=3000*4)
+            self.accel_slider.configure(to=17500*4)
+
+            self.speed_slider.set(self.speed_slider.get()*4/step)
+            self.accel_slider.set(self.accel_slider.get()*4/step)
+
+            self.speed_slider_callback(self.speed_slider.get())
+            self.accel_slider_callback(self.accel_slider.get())
+            
+            # self.speed_label.configure(text="Speed: " + str(int(self.speed_slider.get())))
+            # self.accel_label.configure(text="Acceleration: " + str(int(self.accel_slider.get())))
+
             step = 4
         elif value == "Eighth Step":
             asyncio.run(coap_client.single_put("coap://10.1.1.59/microstep/cmd", "8"))
             asyncio.run(coap_client.single_put("coap://10.1.1.60/microstep/cmd", "8"))
+            
+
+            self.speed_slider.configure(to=3000*8)
+            self.accel_slider.configure(to=17500*8)
+
+            self.speed_slider.set(self.speed_slider.get()*8/step)
+            self.accel_slider.set(self.accel_slider.get()*8/step)
+
+            self.speed_slider_callback(self.speed_slider.get())
+            self.accel_slider_callback(self.accel_slider.get())
+            
+            # self.speed_label.configure(text="Speed: " + str(int(self.speed_slider.get())))
+            # self.accel_label.configure(text="Acceleration: " + str(int(self.accel_slider.get())))
+
             step = 8
         print(value)
     
