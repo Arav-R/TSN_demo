@@ -189,13 +189,17 @@ class App(customtkinter.CTk):
         self.control_frame.grid_rowconfigure(4, weight=1)
         self.speed_label = customtkinter.CTkLabel(self.control_frame, text="Speed", font=customtkinter.CTkFont(size=20))
         self.speed_label.grid(row=0, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.speed_slider = customtkinter.CTkSlider(self.control_frame, from_=0, to=2000, number_of_steps= 100, command=self.speed_slider_callback)
+        self.speed_slider = customtkinter.CTkSlider(self.control_frame, from_=0, to=3000, number_of_steps= 100, command=self.speed_slider_callback)
         self.speed_slider.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.speed_slider.set(2000)
+        self.speed_slider_callback(2000)
 
         self.accel_label = customtkinter.CTkLabel(self.control_frame, text="Acceleration", font=customtkinter.CTkFont(size=20))
         self.accel_label.grid(row=2, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.accel_slider = customtkinter.CTkSlider(self.control_frame, from_=0, to=10000, number_of_steps= 100, command=self.accel_slider_callback)
+        self.accel_slider = customtkinter.CTkSlider(self.control_frame, from_=0, to=17500, number_of_steps= 100, command=self.accel_slider_callback)
         self.accel_slider.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.accel_slider.set(10000)
+        self.accel_slider_callback(10000)
 
         self.option_var = customtkinter.StringVar(value="Full Step")
         self.optionmenu_1 = customtkinter.CTkOptionMenu(self.control_frame, values=["Full Step", "Half Step", "Quarter Step", "Eighth Step"], command=self.microstep_callback, anchor="center", width=200, height=40, font=("Arial", 20))
@@ -225,8 +229,8 @@ class App(customtkinter.CTk):
         
         # spinbox_2.grid(row=6, column=0, padx=(20, 10), pady=(10, 10))
 
-        self.zero_label = customtkinter.CTkButton(self.control_frame, text="Zero Motors", command=self.zero_button_event)
-        self.zero_label.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
+        self.zero_btn = customtkinter.CTkButton(self.control_frame, text="Zero Motors", command=self.zero_button_event)
+        self.zero_btn.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
         self.bind("<Return>", self.zero_button_event)
 
 
@@ -285,8 +289,16 @@ class App(customtkinter.CTk):
         asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "0")) # = 0
         asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "0")) # = 0
         print("zero")
-        self.motor1_label.configure(text="Motor 1: " + str(0))
-        self.motor2_label.configure(text="Motor 2: " + str(0))
+
+        global step1 
+        global step2 
+
+
+        step1 = asyncio.run(coap_client.single_put("coap://10.1.1.59/total/cmd", "-1"))
+        step2 = asyncio.run(coap_client.single_put("coap://10.1.1.60/total/cmd", "-1"))
+
+        # self.motor1_label.configure(text="Motor 1: " + str(0))
+        # self.motor2_label.configure(text="Motor 2: " + str(0))
 
     def speed_slider_callback(self, value):
         self.speed_label.configure(text="Speed: " + str(int(value)))
@@ -377,11 +389,11 @@ if __name__ == "__main__":
 
         if on:
 
-            time.sleep(.2)
+            # time.sleep(.2)
             cycleStart = time.time()
 
             first = time.time()
-            asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", str(25*int(step))))
+            asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", str(25*int(step))))
             seconds = time.time()
             y = seconds - first
             motor1RoundTrip.append(y)
@@ -402,10 +414,10 @@ if __name__ == "__main__":
                 net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
                 bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
                 
-            time.sleep(.2)
+            # time.sleep(.2)
 
             first = time.time()
-            asyncio.run(coap_client.single_put("coap://10.1.1.60/multistep/cmd", str(25*int(step))))
+            asyncio.run(coap_client.single_put("coap://10.1.1.59/multistep/cmd", str(25*int(step))))
             seconds = time.time()
             y = seconds - first
             motor2RoundTrip.append(y)
@@ -417,7 +429,7 @@ if __name__ == "__main__":
             ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
             net = asyncio.run(coap_client.single_get("coap://10.1.1.60/safe/cmd")) # = 0
             bet = int.from_bytes(ret.payload, "big") * int.from_bytes(net.payload, "big")
-            while (int.from_bytes(ret.payload, "big") != 1):
+            while (bet != 1):
                 app.update()
 
                 ret = asyncio.run(coap_client.single_get("coap://10.1.1.59/safe/cmd")) # = 0
