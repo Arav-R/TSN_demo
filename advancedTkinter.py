@@ -194,6 +194,7 @@ class App(customtkinter.CTk):
 
         self.csv_button = customtkinter.CTkButton(self.csv_frame, text="Save", command=self.csv_save_event)
         self.csv_button.grid(row=1, column=0, padx=40, pady=(10, 10), sticky="ew")
+        self.bind("<Return>", self.csv_save_event)
 
         # create slider and progressbar frame
         self.control_frame = customtkinter.CTkFrame(self, fg_color="transparent")
@@ -244,7 +245,7 @@ class App(customtkinter.CTk):
 
         self.zero_btn = customtkinter.CTkButton(self.control_frame, text="Zero Motors", command=self.zero_button_event)
         self.zero_btn.grid(row=7, column=0, padx=(20, 10), pady=(25, 10))
-        self.bind("<Return>", self.zero_button_event)
+        self.bind("<Shift_R>", self.zero_button_event)
 
 
 
