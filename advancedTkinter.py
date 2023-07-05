@@ -5,6 +5,7 @@ from typing import Callable, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 import customtkinter
@@ -183,6 +184,16 @@ class App(customtkinter.CTk):
 
         self.graph_button = customtkinter.CTkButton(self.rightbar_frame, text="Graph", font=customtkinter.CTkFont(size=20), command=self.graph_button_event)
         self.graph_button.grid(row=4, column=0, padx=20, pady=(0, 10))
+
+
+        self.csv_frame = customtkinter.CTkFrame(self.rightbar_frame, fg_color="transparent")
+        self.csv_frame.grid(row=5, column=0, padx=(15, 15), pady=(20, 20), sticky="nsew")
+
+        self.csv_entry = customtkinter.CTkEntry(self.csv_frame, placeholder_text="CSV File Name")
+        self.csv_entry.grid(row=0, column=0, padx=10, pady=(10, 10), sticky="ew")
+
+        self.csv_button = customtkinter.CTkButton(self.csv_frame, text="Save", command=self.csv_save_event)
+        self.csv_button.grid(row=1, column=0, padx=40, pady=(10, 10), sticky="ew")
 
         # create slider and progressbar frame
         self.control_frame = customtkinter.CTkFrame(self, fg_color="transparent")
@@ -372,9 +383,17 @@ class App(customtkinter.CTk):
         asyncio.run(coap_client.single_put("coap://10.1.1.60/accel/cmd", str(int(value))))
         print(value)
 
-    def open_input_dialog_event(self):
-        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
-        print("CTkInputDialog:", dialog.get_input())
+    def csv_save_event(self):
+        file = self.csv_entry.get()
+        print(file + ".csv")
+
+        dict = {'Motor 1': motor1RoundTrip, 'Motor 2': motor2RoundTrip}
+	
+        df = pd.DataFrame(dict)
+
+        df.to_csv("C:/Users/arav/Documents/Python Scripts/CSV/" + file + ".csv", index=False)
+
+        print(df)
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
