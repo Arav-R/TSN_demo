@@ -15,7 +15,7 @@ namespace qn = qindesign::network;
 using namespace std;
 
 //Initialize network stack
-IPAddress IP_Addr(10, 1, 1, 60);
+IPAddress IP_Addr(10, 1, 1, 61);
 IPAddress netmask(255, 255, 255, 0);
 IPAddress gateway(10, 1, 1, 1);
 unsigned int localPort = 5683;
